@@ -1,0 +1,28 @@
+S.O.L.I.D.
+
+Single Responsibility
+- whatever the class that you create, should have only a single responsibility
+- always ask the question, what this class does? If there is "and" it is not following this design principle
+
+Open Closed
+- any class or interface should not be open for the modification
+- to add new functionality, we should only extend the class
+
+Liskov substitution
+- whenever you are creating a parent/child relationship, both the classes should be interchangeable and
+should be substitutable
+- so that means whenever we pass the object of a child and whenever we pass the object of a parent, the both
+should work, the code should be able to handle those scenarios, so we should be able to substitute our classes
+whenever we are passing the objects of it
+
+Interference Segregation
+- we should create interface in such a way that those interfaces should have a proper methods that needs
+to be implemented, and we should not create the interfaces, which have hundreds of methods, but a client does
+not require all those methods to be implemented
+- we should not force the client to implement all the methods, which are not necessary to them
+
+Dependency Inversion
+- we should not have dependency on any modules or sub-modules, so higher level modules should not have
+the dependency on the lower level modules or the classes or objects of it
+- we should design in such a way, that it should not have the dependencies on each other on the different
+classes and objects

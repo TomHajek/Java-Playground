@@ -1,0 +1,4 @@
+Iterator design pattern is the best to see in java Collection library.
+It is an inteface, allowing us to iterate to the next value within the collection (list, arrayList, tree, etc.)
+
+For each collection, it has different implementation.
