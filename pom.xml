@@ -11,6 +11,7 @@
 	<groupId>dev.playground</groupId>
 	<artifactId>Java-Playground</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>Java-Playground</name>
 	<description>Spring Boot Playground</description>
 	<url/>
@@ -20,6 +21,11 @@
 	<developers>
 		<developer/>
 	</developers>
+	<modules>
+		<module>proto</module>
+		<module>grpc-service</module>
+		<module>client-service</module>
+	</modules>
 	<scm>
 		<connection/>
 		<developerConnection/>
