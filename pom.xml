@@ -22,9 +22,9 @@
 		<developer/>
 	</developers>
 	<modules>
-		<module>proto</module>
-		<module>grpc-service</module>
-		<module>client-service</module>
+		<module>shared</module>
+		<module>grpc-server-service</module>
+		<module>grpc-client-service</module>
 	</modules>
 	<scm>
 		<connection/>
@@ -76,6 +76,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

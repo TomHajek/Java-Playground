@@ -1,6 +1,0 @@
-# defining grpc client / server address (channel)
-grpc:
-  client:
-    grpc-server-service:
-      address: static://localhost:9000
-      negotiationType: plaintext

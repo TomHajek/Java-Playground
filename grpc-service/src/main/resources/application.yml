@@ -1,4 +1,0 @@
-# defining grpc server address
-grpc:
-  server:
-    port: 9000

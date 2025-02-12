@@ -1,0 +1,8 @@
+# defining grpc server address
+grpc:
+  server:
+    port: 9000
+    security:
+      enabled: true
+      certificate-chain: file:/home/hayas/Repository/Java-Playground/grpc-server-service/certs/localhost.crt
+      private-key: file:/home/hayas/Repository/Java-Playground/grpc-server-service/certs/localhost.pem

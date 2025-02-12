@@ -1,0 +1,11 @@
+# when having a client as a standalone project
+server:
+  port: 8000
+
+grpc:
+  client:
+    grpc-service-channel:
+      address: static://localhost:9000
+      negotiationType: TLS
+      security:
+        trust-cert-collection: file:/home/hayas/Repository/Java-Playground/grpc-client-service/certs/localhost.cert.pem
