@@ -6,6 +6,7 @@ public class EmployeeResponse {
     private String name;
     private String email;
     private String bloodGroup;
+    private AddressResponse addressResponse;
 
     public int getId() {
         return id;
@@ -38,5 +39,14 @@ public class EmployeeResponse {
     public void setBloodGroup(String bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
+
+    public AddressResponse getAddressResponse() {
+        return addressResponse;
+    }
+
+    public void setAddressResponse(AddressResponse addressResponse) {
+        this.addressResponse = addressResponse;
+    }
+
 
 }
