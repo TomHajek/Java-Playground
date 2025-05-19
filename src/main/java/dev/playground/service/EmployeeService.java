@@ -10,42 +10,51 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class EmployeeService {
 
-    // this would not work with RestTemplateBuilder because, when it is initialized, this value is not read yet
-    //@Value("${address-service.base.url}")
-    //private String addressBaseUrl;
-
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
+    private final WebClient webClient;
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository,
                            ModelMapper modelMapper,
-                           // we have to put it directly into the constructor to find the value when needed
-                           @Value("${address-service.base.url}") String addressBaseUrl,
-                           RestTemplateBuilder builder) {
+                           /*@Value("${address-service.base.url}") String addressBaseUrl,
+                           RestTemplateBuilder builder,*/
+                           WebClient webClient) {
 
         this.employeeRepository = employeeRepository;
         this.modelMapper = modelMapper;
-        this.restTemplate = builder
-                .rootUri(addressBaseUrl)
-                .build();
+        //this.restTemplate = builder
+        //        .rootUri(addressBaseUrl)
+        //        .build();
+        this.webClient = webClient;
     }
 
     public EmployeeResponse getEmployeeById(int id) {
         Employee employee = employeeRepository.findById(id).orElse(null);
         EmployeeResponse employeeResponse = modelMapper.map(employee, EmployeeResponse.class);
 
-        AddressResponse addressResponse = restTemplate.getForObject(
-                "/address/{id}", AddressResponse.class, id
-        );
+        // async (non-blocking) call
+        AddressResponse addressResponse = webClient
+                .get()
+                .uri("/address/" + id)
+                .retrieve()
+                .bodyToMono(AddressResponse.class)
+                .block();
+
         employeeResponse.setAddressResponse(addressResponse);
 
         return employeeResponse;
     }
+
+    // sync (blocking) call -> blocking thread
+    //private AddressResponse callingAddressServiceUsingRestTemplate(int id) {
+    //    return restTemplate.getForObject("/address/{id}", AddressResponse.class, id);
+    //}
 
 }
