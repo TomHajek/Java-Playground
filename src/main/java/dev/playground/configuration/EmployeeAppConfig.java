@@ -13,9 +13,10 @@ public class EmployeeAppConfig {
         return new ModelMapper();
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+    // using RestTemplateBuilder instead
+    //@Bean
+    //public RestTemplate restTemplate() {
+    //    return new RestTemplate();
+    //}
 
 }
