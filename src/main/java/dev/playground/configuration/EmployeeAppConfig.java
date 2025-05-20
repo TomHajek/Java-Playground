@@ -18,12 +18,4 @@ public class EmployeeAppConfig {
         return new ModelMapper();
     }
 
-    @Bean
-    public WebClient webClient() {
-        return WebClient
-                .builder()
-                .baseUrl(addressBaseUrl)
-                .build();
-    }
-
 }
