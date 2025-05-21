@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class AddressController {
 
@@ -17,6 +19,12 @@ public class AddressController {
     @Autowired
     public AddressController(AddressService addressService) {
         this.addressService = addressService;
+    }
+
+    @GetMapping("/address")
+    public ResponseEntity<List<AddressResponse>> getAllAddress() {
+        List<AddressResponse> addressResponse = addressService.getAllAddress();
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @GetMapping("/address/{employeeId}")
