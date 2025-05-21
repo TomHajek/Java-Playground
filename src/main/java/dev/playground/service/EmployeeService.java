@@ -7,6 +7,8 @@ import dev.playground.model.EmployeeResponse;
 import dev.playground.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,19 +17,51 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
     private final AddressClient addressClient;
+    private final DiscoveryClient discoveryClient;
+    private final LoadBalancerClient loadBalancerClient;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper, AddressClient addressClient) {
+    public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper, AddressClient addressClient,
+                           DiscoveryClient discoveryClient, LoadBalancerClient loadBalancerClient) {
         this.employeeRepository = employeeRepository;
         this.modelMapper = modelMapper;
         this.addressClient = addressClient;
+        this.discoveryClient = discoveryClient;
+        this.loadBalancerClient = loadBalancerClient;
     }
 
     public EmployeeResponse getEmployeeById(int id) {
         Employee employee = employeeRepository.findById(id).orElse(null);
         EmployeeResponse employeeResponse = modelMapper.map(employee, EmployeeResponse.class);
 
+        /* For RestTemplate or WebClient approach */
+
+        /*
+        // getting details from discovery service
+        List<ServiceInstance> instances = discoveryClient.getInstances("address-service");
+        ServiceInstance serviceInstance = instances.get(0);
+        String uri = serviceInstance.getUri().toString();
+        */
+
+        /*
+        // using loadbalancer instead
+        ServiceInstance serviceInstance = loadBalancerClient.choose("address-service");
+        String uri = serviceInstance.getUri().toString();
+        String contextPath = serviceInstance.getMetadata().get("configPath");
+
+        System.out.println("uri >>> " + uri + contextPath);
+        */
+
+        /*
+        // or we can use eureka directly with the name of the service
+        // note that with this approach, we have to add @LoadBalanced to the RestTemplate or WebClient bean
+        String path = "http://ADDRESS-SERVICE/address-service/api/address/{id}"
+        */
+
+        /* For FeignClient approach */
         // instead of RestTemplate or WebClient, we are going to use FeignClient
+        // FeignClient/Eureka already have transient dependecy for the load balancing
+        // by default it is using "round robbing" strategy
         AddressResponse addressResponse = addressClient.getAddressByEmployeeId(id).getBody();
 
         employeeResponse.setAddressResponse(addressResponse);
