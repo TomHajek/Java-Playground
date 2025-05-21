@@ -11,6 +11,12 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 public class EmployeeService {
 
@@ -28,6 +34,35 @@ public class EmployeeService {
         this.addressClient = addressClient;
         this.discoveryClient = discoveryClient;
         this.loadBalancerClient = loadBalancerClient;
+    }
+
+    public List<EmployeeResponse> getAllEmployees() {
+        List<Employee> employeeList = employeeRepository.findAll();
+        List<EmployeeResponse> employeesResponse = Arrays.asList(modelMapper.map(employeeList, EmployeeResponse[].class));
+
+        // rest call using open feign
+        List<AddressResponse> addressResponse = addressClient.getAllAddress().getBody();
+
+        // this is not efficient, it is O(n*m)
+//        employeesResponse.forEach(employee -> {
+//            for(AddressResponse address: addressResponse) {
+//                if(address.getId() == employee.getId()) {
+//                    employee.setAddressResponse(address);
+//                }
+//            }
+//        });
+
+        // convert the list of addresses to a map for O(1) lookups
+        Map<Integer, AddressResponse> addressMap = addressResponse
+                .stream()
+                .collect(Collectors.toMap(AddressResponse::getId, Function.identity()));
+
+        // match address to employee using the map
+        employeesResponse.forEach(employee ->
+                employee.setAddressResponse(addressMap.get(employee.getId()))
+        );
+
+        return employeesResponse;
     }
 
     public EmployeeResponse getEmployeeById(int id) {
